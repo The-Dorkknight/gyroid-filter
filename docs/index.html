@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gyroid Filter: open-cell gyroid walls for fillable carbon filters</title>
+<meta name="description" content="Pick a face or cylinder and make it open-cell gyroid in Cura, PrusaSlicer and OrcaSlicer. Source-available, non-commercial. Work in progress.">
+<link rel="icon" href="images/favicon-64.png"><link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<style>
+:root{--bg:#0f1720;--card:#17212b;--line:#26323f;--text:#e6edf3;--mut:#93a1b0;--acc:#2dd4bf;--org:#ffa94d}
+@media (prefers-color-scheme:light){:root{--bg:#f6f8fa;--card:#fff;--line:#d8dee4;--text:#1f2328;--mut:#59636e;--acc:#0f766e;--org:#c2410c}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wip{background:#7c2d12;color:#ffedd5;text-align:center;padding:8px 12px;font-weight:700;letter-spacing:.02em}
+main{max-width:980px;margin:0 auto;padding:24px 18px 60px}
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:center;margin:18px 0 30px}
+.hero img.icon{width:72px;height:72px;border-radius:16px}
+h1{margin:.3em 0 .2em;font-size:2.1rem;line-height:1.15}h2{margin-top:2em}
+.lead{color:var(--mut);font-size:1.1rem}
+.shot{width:100%;height:auto;border-radius:12px;border:1px solid var(--line)}
+.btn{display:inline-block;background:var(--acc);color:#04201c;padding:10px 18px;border-radius:10px;font-weight:700;text-decoration:none;margin:6px 8px 6px 0}
+.btn.alt{background:none;color:var(--text);border:1px solid var(--line)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}.card h3{margin:.1em 0 .3em;font-size:1.05rem}
+table{border-collapse:collapse;width:100%;font-size:.95rem}td,th{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+code{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:1px 5px}
+footer{color:var(--mut);font-size:.9rem;border-top:1px solid var(--line);margin-top:40px;padding-top:16px}
+@media (max-width:760px){.hero{grid-template-columns:1fr}h1{font-size:1.7rem}}
+</style></head><body>
+<div class="wip">WORK IN PROGRESS: MANY FEATURES MAY BE BROKEN · version 0.1.0-wip</div>
+<main>
+<section class="hero"><div>
+<img class="icon" src="images/icon-512.png" alt="">
+<h1>Gyroid Filter</h1>
+<p class="lead">Pick a flat face or a cylinder and make part or all of it <b>open-cell gyroid</b>, for printing <b>fillable carbon filters</b>. Works with Cura, PrusaSlicer and OrcaSlicer.</p>
+<a class="btn" id="dl" href="https://github.com/The-Dorkknight/gyroid-filter">Get it on GitHub</a>
+<a class="btn alt" id="pdf" href="Gyroid-Filter-manual.pdf">📘 Manual (PDF)</a>
+</div><img class="shot" src="images/02-picked-cylinder.webp" alt="The app showing the example filter cartridge with its outer wall picked"></section>
+
+<h2>What it does</h2>
+<div class="cards">
+<div class="card"><h3>Click a surface</h3><p>A flat face or a true cylinder (hole or outer, full or partial). It finds the whole surface and measures the wall under it.</p></div>
+<div class="card"><h3>Open-cell, all the way through</h3><p>No walls, no skin: the gyroid strands are the surface, so air passes and granules stay in. Choose density, a solid rim, or just a window.</p></div>
+<div class="card"><h3>Your slicer does the work</h3><p>A Cura plug-in adds a cutting mesh; for PrusaSlicer and OrcaSlicer you get a 3MF with the regions already in as modifiers. Your model is never changed.</p></div>
+</div>
+
+<h2>What exists, and what does not</h2>
+<table>
+<tr><th>Part</th><th>Status</th></tr>
+<tr><td>Picking, regions, web app, PrusaSlicer 3MF</td><td>Working. Sliced in a real PrusaSlicer 2.7.2 and the G-code checked</td></tr>
+<tr><td>OrcaSlicer 3MF</td><td>Written from Orca's source, <b>not opened in Orca yet</b></td></tr>
+<tr><td>Cura plug-in</td><td>Works well in a real Cura on Linux Mint (author's test). Windows and Mac <b>not tested yet</b></td></tr>
+<tr><td>Printing a real filter, pore size vs density</td><td>Nothing printed or measured yet</td></tr>
+<tr><td>Cones, spheres, free-form surfaces; housing and lid design</td><td>Not there</td></tr>
+</table>
+
+<h2>Install (no terminal)</h2>
+<ol><li>Download and unzip.</li><li>Double-click <code>GyroidFilter-Linux.sh</code>, <code>GyroidFilter-Windows.bat</code> or <code>GyroidFilter-Mac.command</code>. Needs Python 3.8+ and nothing else.</li><li>Your browser opens. Load the example cartridge, click a wall, press <b>Add open-cell region</b>, export.</li></ol>
+
+<footer><p><b>Source-available, non-commercial</b> (PolyForm Noncommercial 1.0.0). Provided as is, no warranty or liability. Not a medical or safety device. © Matthew Armstrong · <a href="https://github.com/The-Dorkknight/gyroid-filter" id="repo">The-Dorkknight/gyroid-filter</a></p></footer>
+</main>
+<script>
+(function(){var h=location.hostname,p=location.pathname.split('/').filter(Boolean);var owner='The-Dorkknight',repo='gyroid-filter';
+if(/\.github\.io$/.test(h)){owner=h.split('.')[0];if(p.length)repo=p[0];}
+var u='https://github.com/'+owner+'/'+repo;['dl','repo'].forEach(function(i){var a=document.getElementById(i);if(a){a.href=u;if(i==='repo')a.textContent=owner+'/'+repo;}});})();
+</script></body></html>

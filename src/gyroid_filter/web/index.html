@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="token" content="__TOKEN__">
+<title>Gyroid Filter __VERSION__ (Built __BUILD__)</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <div class="brand"><img src="/favicon.svg" alt="" width="28" height="28"> <b>Gyroid Filter</b>
+    <span class="pill">WORK IN PROGRESS</span></div>
+  <nav>
+    <button class="tab on" data-tab="main">1 · Pick &amp; export</button>
+    <button class="tab" data-tab="cura">Cura plug-in</button>
+    <button class="tab" data-tab="about">About</button>
+  </nav>
+  <button id="quit" class="ghost" title="Stop the app">Quit</button>
+</header>
+
+<main id="tab-main" class="tabpane">
+  <section id="viewwrap">
+    <canvas id="view"></canvas>
+    <div id="hint">Open a model, then click a flat face or a cylinder.</div>
+    <div id="busy" hidden><span class="spin"></span><span id="busytext"></span></div>
+    <div id="legend"><i style="background:#8b98a5"></i>model <i style="background:#ffa94d"></i>picked <i style="background:#fde047"></i>preview <i style="background:#34d399"></i>open-cell regions</div>
+  </section>
+
+  <aside>
+    <div class="card">
+      <h3>1. Model</h3>
+      <div class="row">
+        <label class="btn"><input type="file" id="file" accept=".stl,.3mf" hidden>Open STL / 3MF…</label>
+        <button id="example" class="ghost">Load example cartridge</button>
+      </div>
+      <div id="modelinfo" class="muted">Nothing loaded yet. You can also drop a file on the 3D view.</div>
+    </div>
+
+    <div class="card">
+      <h3>2. Pick a surface</h3>
+      <div class="row seg" id="modes">
+        <button data-mode="auto" class="on">Auto</button><button data-mode="plane">Flat face</button><button data-mode="cylinder">Cylinder</button>
+      </div>
+      <div id="selinfo" class="muted">Click the model.</div>
+    </div>
+
+    <div class="card" id="optcard">
+      <h3>3. Make it open-cell</h3>
+      <label class="line"><input type="checkbox" id="through" checked> Open all the way through the wall <span class="muted">(measured for you)</span></label>
+      <label class="line" id="depthrow" hidden>Depth <input type="number" id="depth" value="3" min="0.2" step="0.1"> mm</label>
+      <label class="line">Gyroid density <input type="number" id="density" value="25" min="5" max="60" step="1"> %
+        <span class="muted">lower = bigger pores</span></label>
+      <label class="line">Solid rim around it <input type="number" id="margin" value="3" min="0" step="0.5"> mm
+        <span class="muted">0 = the whole surface</span></label>
+      <details>
+        <summary>Only part of it (optional)</summary>
+        <div id="planeopts">
+          <label class="line">Shape <select id="shape"><option value="rect">rectangle</option><option value="ellipse">oval</option></select></label>
+          <label class="line">Across <input type="range" id="u0" min="0" max="100" value="0"> <input type="range" id="u1" min="0" max="100" value="100"></label>
+          <label class="line">Up/down <input type="range" id="v0" min="0" max="100" value="0"> <input type="range" id="v1" min="0" max="100" value="100"></label>
+        </div>
+        <div id="cylopts">
+          <label class="line">Along the axis <input type="range" id="a0" min="0" max="100" value="0"> <input type="range" id="a1" min="0" max="100" value="100"></label>
+          <label class="line">Around (°) <input type="range" id="g0" min="0" max="360" value="0"> <input type="range" id="g1" min="0" max="360" value="360"></label>
+        </div>
+      </details>
+      <div id="stats" class="muted"></div>
+      <div class="row"><button id="add" class="primary" disabled>Add open-cell region</button></div>
+    </div>
+
+    <div class="card">
+      <h3>4. Regions &amp; export</h3>
+      <ul id="regions"><li class="muted">None yet.</li></ul>
+      <div class="row">
+        <label class="line small">Bed centre X,Y (mm) <input type="number" id="bedx" value="125" step="1"> <input type="number" id="bedy" value="105" step="1"></label>
+      </div>
+      <div class="row">
+        <button id="xprusa" disabled>PrusaSlicer 3MF</button>
+        <button id="xorca" disabled>OrcaSlicer 3MF</button>
+        <button id="xstl" disabled>Region STLs (.zip)</button>
+      </div>
+      <p class="muted small">Cura: use the <b>Cura plug-in</b> tab — it adds the same regions inside Cura. Open the 3MF in your slicer, press <b>A</b> (arrange) if the part sits off the bed, then slice.</p>
+    </div>
+  </aside>
+</main>
+
+<main id="tab-cura" class="tabpane" hidden>
+  <div class="page">
+    <h2>Cura plug-in</h2>
+    <p>Installs the <b>Gyroid Filter</b> tool into Cura. Afterwards: select a model in Cura, pick the <b>Gyroid Filter</b> tool on the left, click a face or cylinder.</p>
+    <p class="warn">Work in progress: this plug-in has been run inside a real Cura on Linux Mint and works well. Windows and Mac are <b>not tested yet</b>. Please report what happens.</p>
+    <div class="row"><button id="curarefresh" class="ghost">Look for Cura again</button></div>
+    <div id="curalist" class="muted">Looking for Cura…</div>
+  </div>
+</main>
+
+<main id="tab-about" class="tabpane" hidden>
+  <div class="page">
+    <h2>About</h2>
+    <p><b>Gyroid Filter</b> __VERSION__ · built __BUILD__ · source-available, non-commercial (PolyForm Noncommercial 1.0.0), no warranty.</p>
+    <p>It never changes your original model. It builds extra "region" volumes that your slicer prints as open-cell gyroid (no walls, no skin), so air can pass through while carbon granules stay in.</p>
+    <p class="muted">Not a medical or safety device. Check that your printed filter suits what you filter; PLA/PETG are not rated for food, chemicals or high temperatures.</p>
+  </div>
+</main>
+
+<footer><span id="statusbar">v__VERSION__ · __BUILD__</span></footer>
+<script type="module" src="/app.js"></script>
+</body>
+</html>

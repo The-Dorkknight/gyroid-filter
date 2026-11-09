@@ -1,0 +1,3 @@
+# Gyroid Filter needs nothing beyond Python 3.8+ (standard library only).
+# Optional: numpy makes the wall-thickness check faster on very big models (not required).
+# numpy>=1.20

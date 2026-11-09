@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.idea/
+.vscode/
+*.log
+*.gcode
+.DS_Store
+Thumbs.db
+src/gyroid_filter/_tmp.stl

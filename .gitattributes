@@ -1,0 +1,9 @@
+*.sh text eol=lf
+*.command text eol=lf
+*.bat text eol=crlf
+*.py text eol=lf
+*.stl binary
+*.3mf binary
+*.pdf binary
+*.webp binary
+*.png binary

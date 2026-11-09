@@ -1,0 +1,9 @@
+{
+    "name": "Gyroid Filter",
+    "author": "Matthew Armstrong",
+    "version": "0.1.0",
+    "description": "Click a face or a cylinder of a model and make part or all of it open-cell gyroid, for fillable carbon filters. Work in progress.",
+    "api": 8,
+    "supported_sdk_versions": ["8.0.0", "9.0.0"],
+    "i18n-catalog": "cura"
+}

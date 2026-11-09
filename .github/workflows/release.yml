@@ -1,0 +1,37 @@
+name: release
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - name: Version
+        id: v
+        run: |
+          VER=$(python -c "import sys;sys.path.insert(0,'src');import gyroid_filter as g;print(g.__version__)")
+          echo "ver=$VER" >> "$GITHUB_OUTPUT"
+      - run: pip install markdown pillow playwright numpy && python -m playwright install --with-deps chromium
+      - name: Tests
+        run: python tools/build_cura_plugin.py --check && python -m unittest discover -s tests 
+      - name: PDF manual
+        run: python tools/make_pdf.py --out gyroid-filter-v${{ steps.v.outputs.ver }}-manual.pdf
+      - name: Cura plug-in zip
+        run: |
+          cd cura_plugin && zip -r ../GyroidFilter-cura-plugin-v${{ steps.v.outputs.ver }}.zip GyroidFilter -x '*/__pycache__/*'
+      - name: Checksums
+        run: sha256sum *.pdf *.zip > SHA256SUMS.txt
+      - name: Pre-release
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: |
+          TAG="v${{ steps.v.outputs.ver }}"
+          gh release view "$TAG" >/dev/null 2>&1 && gh release upload "$TAG" *.pdf *.zip SHA256SUMS.txt --clobber || \
+          gh release create "$TAG" --target "$GITHUB_SHA" --prerelease --title "Gyroid Filter $TAG (work in progress)" \
+            --notes "Work in progress: many features may be broken. See CHANGELOG.md for what was tested and what was not." \
+            *.pdf *.zip SHA256SUMS.txt

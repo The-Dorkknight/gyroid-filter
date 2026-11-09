@@ -1,0 +1,30 @@
+name: Bug report
+description: Something did not work (this is a work-in-progress project, so bugs are expected)
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes: {label: Gyroid Filter version, description: "Shown in the web app's status bar, e.g. 0.1.0-wip"}
+    validations: {required: true}
+  - type: dropdown
+    id: slicer
+    attributes:
+      label: Slicer
+      options: [Cura plug-in, PrusaSlicer 3MF, OrcaSlicer 3MF, Web app only, Other]
+    validations: {required: true}
+  - type: input
+    id: slicerver
+    attributes: {label: Slicer version}
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options: [Linux, Windows, macOS]
+    validations: {required: true}
+  - type: textarea
+    id: what
+    attributes: {label: What happened, description: "What you clicked, what you expected, what you got. Say if the model is an STL or 3MF and roughly how many triangles."}
+    validations: {required: true}
+  - type: textarea
+    id: log
+    attributes: {label: Log, description: "Text printed in the launcher window, or the GyroidFilter lines from cura.log", render: text}
